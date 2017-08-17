@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Chrome Regex Search</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <style type="text/css">
+      body {
+        background-color: white;
+      }
+      
+      a:link, a:visited {
+        display: block;
+        width: 2em;  
+        padding: 0.2em;
+        line-height: 1.6;
+        background-color: #f2f2f2;
+        color: #000;
+        text-decoration: bold;
+        text-align: center;
+        float: right;
+        -webkit-box-shadow: inset 0 0 30px #fff;
+        box-shadow: inset 0 0 30px #fff;
+        border-radius: 2px;
+        -webkit-text-stroke: 2px rgba(0,0,0,1);
+      }
+      a.selected {
+        background-color: #eaeaea;
+        color: #000;
+        -webkit-box-shadow: inset 0 3px 3px rgba(0, 0, 0, .125);
+               box-shadow: inset 0 3px 3px rgba(0, 0, 0, .125);
+      }
+      a:hover {
+        background-color: #dadada;
+        color: #000;
+      }
+      .flexContainer {
+        position: relative;
+        text-align: right;
+        display: flex;
+        margin-bottom: 8px;
+      }
+      #inputRegex {
+        width: 14em;
+        border: 1px solid #dadada;
+        padding-right: 5em;
+      }
+      #numResults {
+        position: absolute;
+        top: 0.25em;
+        right: 5em;
+        min-width: 4em;
+        max-width: 5em;
+        overflow:auto;
+        white-space: nowrap;
+        height: 1.6;
+        font-size: 10pt;
+        user-drag: none; 
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+      }
+      .error-chrome-regex {
+        color: #FF0000;
+      }
+    </style>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <div class="flexContainer">
+      <input id="inputRegex" type="text" name="inputRegex"></input><span id="numResults"></span>
+      <a href="#" id="prev" type="button" title="Previous Match"><i class="fa fa-chevron-left"></i></a>
+      <a href="#" id="next" type="button" title="Next Match"><i class="fa fa-chevron-right"></i></a>
+    </div>
+    <span id="error" class="error-chrome-regex"></span>
+  </body>
+  <script type="text/javascript" src="js/hangul.min.js"></script>
+  <script type="text/javascript" src="js/popup.js"></script>
+</html>

@@ -1,0 +1,42 @@
+{
+  "manifest_version": 2,
+
+  "name": "SearchKR",
+  "description": "Extension for Search Korean by initial with regex",
+  "version": "1.0.1",
+  "icons": {
+    "32": "icons/icons_32.png",
+    "128": "icons/icons_128.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "32": "icons/icons_32.png",
+      "128": "icons/icons_128.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "background": {
+    "scripts": ["js/background.js"],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": [ "http://*/*", "https://*/*", "file://*/*" ],
+      "js": [ "js/content.js" ]
+    }
+  ],
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "windows": "Ctrl+Shift+F",
+        "mac": "MacCtrl+Shift+F",
+        "chromeos": "Ctrl+Shift+F",
+        "linux": "Ctrl+Shift+F"
+      }
+    }
+  }
+}
