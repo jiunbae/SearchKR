@@ -9,12 +9,12 @@ var DEFAULT_HIGHLIGHT_COLOR = '#ffff00';
 var DEFAULT_SELECTED_COLOR = '#ff9900';
 var DEFAULT_TEXT_COLOR = '#000000';
 var DEFAULT_CASE_INSENSITIVE = false;
+
 var searchInfo;
 
 Element.prototype.documentOffsetTop = function () {
   return this.offsetTop + ( this.offsetParent ? this.offsetParent.documentOffsetTop() : 0 );
 };
-
 Element.prototype.visible = function() {
     return (!window.getComputedStyle(this) || window.getComputedStyle(this).getPropertyValue('display') == '' || 
            window.getComputedStyle(this).getPropertyValue('display') != 'none')
@@ -24,6 +24,7 @@ function initSearchInfo(pattern) {
   var pattern = typeof pattern !== 'undefined' ? pattern : '';
   searchInfo = {
     regexString : pattern,
+    regexReplaced : processString(pattern),
     selectedIndex : 0,
     highlightedNodes : [],
     length : 0
@@ -148,6 +149,40 @@ function validateRegex(pattern) {
   }
 }
 
+String.format = function(format) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  return format.replace(/{(\d+)}/g, function(match, number) { 
+    return typeof args[number] != 'undefined'
+      ? args[number] 
+      : match
+    ;
+  });
+};
+
+function tokenize(char) {
+  var code = char.charCodeAt(0);
+  if (code == 32) return " ";
+  if (Hangul.isComplete(char)) return char;
+  if (Hangul.isCho(char)) {
+    return String.format("[{0}-{1}{2}]",
+      Hangul.a([char, 'ㅏ']),
+      Hangul.a([char, 'ㅣ', 'ㅎ']),
+      char);
+  }
+  if (Hangul.isVowel(char)) {
+    return "";
+  }
+  return char;
+}
+
+function processString(string) {
+  var resultString = "";
+  for (let char of string) {
+    resultString += tokenize(char);
+  }
+  return resultString;
+}
+
 function search(regexString, configurationChanged) {
   var regex = validateRegex(regexString);
   if (regex && regexString != '' && (configurationChanged || regexString !== searchInfo.regexString)) { // new valid regex string
@@ -160,11 +195,8 @@ function search(regexString, configurationChanged) {
       'caseInsensitive' : DEFAULT_CASE_INSENSITIVE}, 
       function(result) {
         initSearchInfo(regexString);
-        if(result.caseInsensitive){
-          regex = new RegExp(regexString, 'i');
-        }
-        highlight(regex, result.highlightColor, result.selectedColor, result.textColor, result.maxResults);
-        selectFirstNode(result.selectedColor);
+        highlight(searchInfo.regexReplaced, result.highlightColor, result.selectedColor, result.textColor, result.maxResults);
+        //selectFirstNode(result.selectedColor);
         returnSearchInfo('search');
       }
     );
@@ -173,7 +205,7 @@ function search(regexString, configurationChanged) {
       'highlightColor' : DEFAULT_HIGHLIGHT_COLOR,
       'selectedColor' : DEFAULT_SELECTED_COLOR}, 
       function(result) {
-        selectNextNode(result.highlightColor, result.selectedColor);
+        //selectNextNode(result.highlightColor, result.selectedColor);
       }
     );
   } else {
